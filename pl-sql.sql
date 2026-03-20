@@ -78,3 +78,7 @@ use hex_ecom_proj;
 
 select v.name as vendor ,count(p.vendor_id) as number_of_product,avg(p.price) as average_price from product p right join vendor v on p.vendor_id=v.id 
 group by v.name; 
+
+
+CREATE DATABASE intern_management;
+create database ticket_sys_sample;

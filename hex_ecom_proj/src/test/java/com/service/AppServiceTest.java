@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class AppServiceTest {
+
     AppService appService=new AppService();
     @Test
     public void addTest(){
