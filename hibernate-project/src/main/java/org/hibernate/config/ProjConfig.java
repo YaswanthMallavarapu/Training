@@ -1,17 +1,23 @@
 package org.hibernate.config;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
 @ComponentScan("org.hibernate.*")
+@EnableTransactionManagement
 public class ProjConfig {
 
     @Bean
@@ -25,7 +31,7 @@ public class ProjConfig {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean getEntityManager(){
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
 
         // LocalContainerEntityManagerFactoryBean creating pojo class and setting required fields datasouce
         // components to scan for models
@@ -47,4 +53,10 @@ public class ProjConfig {
         return localContainerEntityManagerFactoryBean;
     }
 
+    @Bean
+    public PlatformTransactionManager getTransactionManager(EntityManagerFactory emf){
+        return new JpaTransactionManager(emf);
+    }
 }
+
+
