@@ -58,7 +58,7 @@ public class FundController {
                 case 3:
                     System.out.println("Enter manager name to get funds");
                     String name=sc.next().trim();
-                    List<Fund> list=fundService.getFundsByManagerName(name);
+                    List<?> list=fundService.getFundsByManagerName(name);
                     if(list.isEmpty()){
                         System.out.println("Funds with the given manager name is Empty.");
                     }else{

@@ -36,7 +36,7 @@ public class FundService {
 
     }
 
-    public List<Fund> getFundsByManagerName(String name) {
+    public List<?> getFundsByManagerName(String name) {
         String jpql="select f from Fund f where f.manager.name =:managerName";
         Query query=em.createQuery(jpql,Fund.class);
         query.setParameter("managerName",name);
