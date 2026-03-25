@@ -1,8 +1,10 @@
 package com.springboot.myapp.service;
 
+import com.springboot.myapp.dto.FilterReqDto;
 import com.springboot.myapp.dto.TicketPageResDto;
 import com.springboot.myapp.dto.TicketReqDto;
 import com.springboot.myapp.dto.TicketResDto;
+import com.springboot.myapp.enums.TicketPriority;
 import com.springboot.myapp.enums.TicketStatus;
 import com.springboot.myapp.exceptions.ResourceNotFoundException;
 import com.springboot.myapp.mapper.TicketMapper;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -62,5 +65,16 @@ public class TicketService {
                 ticket.getTicketStatus(),
                 ticket.getCreatedAt()
         );
+    }
+
+    public List<Ticket> filterTickets(FilterReqDto filterReqDto) {
+        if(filterReqDto.priority() ==null && filterReqDto.status()==null) {
+            return List.of();
+        }
+        TicketPriority priority=(filterReqDto.priority()!=null && !filterReqDto.priority().isEmpty())
+                ?TicketPriority.valueOf(filterReqDto.priority()):null;
+        com.springboot.myapp.enums.TicketStatus status =(filterReqDto.status()!=null && !filterReqDto.status().isEmpty())
+                ?TicketStatus.valueOf(filterReqDto.status()):null;
+        return ticketRepository.getByPriorityAndStatus(priority,status);
     }
 }

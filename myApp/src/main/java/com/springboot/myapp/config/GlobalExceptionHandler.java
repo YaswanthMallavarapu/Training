@@ -56,4 +56,18 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(map);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(
+            IllegalArgumentException e
+    ){
+        Map<String,Object>map=new HashMap<>();
+
+        map.put("message","Enum must be valid");
+        return ResponseEntity
+                .status(HttpStatus.EXPECTATION_FAILED)
+                .body(map);
+
+    }
+
 }

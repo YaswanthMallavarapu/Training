@@ -1,5 +1,6 @@
 package com.springboot.myapp.controller;
 
+import com.springboot.myapp.dto.FilterReqDto;
 import com.springboot.myapp.dto.TicketPageResDto;
 import com.springboot.myapp.dto.TicketReqDto;
 import com.springboot.myapp.dto.TicketResDto;
@@ -37,5 +38,11 @@ public class TicketController {
     @GetMapping("/get/{id}")
     public TicketResDto getTicketById(@PathVariable long id){
         return ticketService.getTicketById(id);
+    }
+
+    @GetMapping("/get/filter")
+    public List<Ticket> filterTickets(@RequestBody FilterReqDto filterReqDto){
+        return ticketService.filterTickets(filterReqDto);
+
     }
 }
