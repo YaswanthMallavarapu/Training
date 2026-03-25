@@ -1,5 +1,6 @@
 package com.springboot.myapp.config;
 
+import com.springboot.myapp.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -43,5 +44,16 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.EXPECTATION_FAILED)
                 .body(map);
 
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<?> handleResourceNotFoundException(
+            ResourceNotFoundException e
+    ){
+        Map<String,String>map=new HashMap<>();
+        map.put("message",e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(map);
     }
 }
