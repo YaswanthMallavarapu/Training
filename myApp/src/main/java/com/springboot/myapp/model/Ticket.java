@@ -35,4 +35,12 @@ public class Ticket {
     @UpdateTimestamp
     private  Instant updatedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "executive_id")
+    private Executive executive;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
 }

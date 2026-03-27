@@ -2,6 +2,7 @@ package com.springboot.myapp.mapper;
 
 import com.springboot.myapp.dto.TicketReqDto;
 import com.springboot.myapp.dto.TicketResDto;
+import com.springboot.myapp.dto.TicketWithCustomerExecutiveResDto;
 import com.springboot.myapp.model.Ticket;
 
 public  class TicketMapper {
@@ -21,5 +22,17 @@ public  class TicketMapper {
                 ticket.getCreatedAt()
         );
 
+    }
+    public static TicketWithCustomerExecutiveResDto mapToResDto(Ticket ticket){
+        return new TicketWithCustomerExecutiveResDto(
+                ticket.getId(),
+                ticket.getSubject(),
+                ticket.getTicketStatus(),
+                ticket.getTicketPriority(),
+                ticket.getCreatedAt(),
+                ticket.getCustomer().getName(),
+                ticket.getExecutive().getName(),
+                ticket.getExecutive().getJobTitle()
+        );
     }
 }

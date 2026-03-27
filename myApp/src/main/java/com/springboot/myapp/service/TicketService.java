@@ -1,13 +1,12 @@
 package com.springboot.myapp.service;
 
-import com.springboot.myapp.dto.FilterReqDto;
-import com.springboot.myapp.dto.TicketPageResDto;
-import com.springboot.myapp.dto.TicketReqDto;
-import com.springboot.myapp.dto.TicketResDto;
+import com.springboot.myapp.dto.*;
 import com.springboot.myapp.enums.TicketPriority;
 import com.springboot.myapp.enums.TicketStatus;
 import com.springboot.myapp.exceptions.ResourceNotFoundException;
 import com.springboot.myapp.mapper.TicketMapper;
+import com.springboot.myapp.model.Customer;
+import com.springboot.myapp.model.Executive;
 import com.springboot.myapp.model.Ticket;
 import com.springboot.myapp.repository.TicketRepository;
 import jakarta.validation.Valid;
@@ -16,20 +15,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
-import java.time.Instant;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class TicketService {
     private final TicketRepository ticketRepository;
+    private final CustomerService customerService;
+    private final ExecutiveService executiveService;
 
-    public Ticket addTicket(@Valid TicketReqDto ticketReqDto) {
+    public Ticket addTicket(@Valid TicketReqDto ticketReqDto, long customerId) {
+        //check for customer
+        Customer customer=customerService.getById(customerId);
         //convert to ticket
         Ticket ticket= TicketMapper.mapToTicket(ticketReqDto);
         //add additional
         ticket.setTicketStatus(TicketStatus.OPEN);
+        ticket.setCustomer(customer);
         //save in repository
         return ticketRepository.save(ticket);
 
@@ -76,5 +81,39 @@ public class TicketService {
         com.springboot.myapp.enums.TicketStatus status =(filterReqDto.status()!=null && !filterReqDto.status().isEmpty())
                 ?TicketStatus.valueOf(filterReqDto.status()):null;
         return ticketRepository.getByPriorityAndStatus(priority,status);
+    }
+
+
+    public void addExecutiveToTicket(long ticketId, long executiveID) {
+        //get ticket
+        Ticket ticket=getById(ticketId);
+        //get executive
+
+        Executive executive=executiveService.getExecutiveById(executiveID);
+
+        //attach executive to ticket
+        ticket.setExecutive(executive);
+        //save ticket
+        ticketRepository.save(ticket);
+    }
+
+    public Ticket getById(long id){
+        return ticketRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Invalid Ticket id."));
+    }
+
+    public List<TicketWithCustomerExecutiveResDto> getAllTicketsByCustomer(long customerId, int page, int size) {
+        //check for customer
+        customerService.getById(customerId);
+        //create pagination
+        Pageable pageable=PageRequest.of(page,size);
+        Page<Ticket>pageList=ticketRepository.findAll(pageable);
+        return pageList
+                .toList()
+                .stream()
+                .map(TicketMapper::mapToResDto)
+                .toList();
+
+
     }
 }
