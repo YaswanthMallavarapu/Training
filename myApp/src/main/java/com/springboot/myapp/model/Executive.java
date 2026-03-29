@@ -20,4 +20,6 @@ public class Executive {
     @Enumerated(EnumType.STRING)
     private JobTitle jobTitle;
 
+    @OneToOne
+    private User user;
 }

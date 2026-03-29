@@ -18,4 +18,7 @@ public class Customer {
     @Column(unique = true)
     private String email;
     private String city;
+
+    @OneToOne
+    private User user;
 }

@@ -16,6 +16,7 @@ import java.util.List;
 public class CustomerPlanController {
 
     private final CustomerPlanService customerPlanService;
+    /* Access : customer, admin */
     @PostMapping("/add/{customerId}/{planId}")
     public ResponseEntity<?> buyPlan(@RequestBody CustomerPlanReqDto customerPlanReqDto,
                                           @PathVariable  long customerId,
@@ -26,6 +27,7 @@ public class CustomerPlanController {
                 .build();
     }
 
+    /* Access : admin */
     @GetMapping("/get-all")
     public ResponseEntity<?> getAllCustomerDetails(@RequestParam(value = "page",required = false,defaultValue = "0")int page,
                                                                           @RequestParam(value = "size",required = false,defaultValue = "5")int size){

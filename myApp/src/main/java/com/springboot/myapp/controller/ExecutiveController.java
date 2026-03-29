@@ -19,6 +19,7 @@ import java.util.List;
 public class ExecutiveController {
     private final ExecutiveService executiveService;
 
+    /* ACCESS : executive */
     @PostMapping("/add")
     public ResponseEntity<?> addExecutive(@Valid @RequestBody ExecutiveDto executiveDto){
         Executive executive=executiveService.addExecutive(executiveDto);
@@ -28,17 +29,20 @@ public class ExecutiveController {
 
     }
 
+    /* Access : admin */
     @GetMapping("/get-all")
     public List<Executive> getAllExecutives(@RequestParam(value = "page",required = false,defaultValue = "0")int page,
                                            @RequestParam(value = "size",required = false,defaultValue = "5") int size){
         return executiveService.getAllExecutives(page,size);
     }
 
+    /* Access : admin */
     @GetMapping("/get/{id}")
     public Executive getExecutiveById(@PathVariable long id){
         return executiveService.getExecutiveById(id);
     }
 
+    /* Access : admin */
     @GetMapping("/get")
     public List<Executive> filterExecutive(@RequestParam(value = "job-title",required = false)JobTitle jobTitle){
         return executiveService.filterExecutive(jobTitle);
