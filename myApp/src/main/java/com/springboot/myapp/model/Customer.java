@@ -1,6 +1,7 @@
 package com.springboot.myapp.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -16,6 +17,7 @@ public class Customer {
     private Long id;
     private String name;
     @Column(unique = true)
+    @NotNull
     private String email;
     private String city;
 
