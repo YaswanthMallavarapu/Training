@@ -31,8 +31,8 @@ public  class TicketMapper {
                 ticket.getTicketPriority(),
                 ticket.getCreatedAt(),
                 ticket.getCustomer().getName(),
-                ticket.getExecutive().getName(),
-                ticket.getExecutive().getJobTitle()
+                ticket.getExecutive()!=null?ticket.getExecutive().getName():"No Executive Assigned",
+                ticket.getExecutive()!=null?ticket.getExecutive().getJobTitle():null
         );
     }
 }

@@ -78,8 +78,7 @@ public class SecurityConfig {
                         .hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/customer/add")
                         .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/customer/plan/add/{customerId}/{planId}")
-                        .hasAnyAuthority("ADMIN","CUSTOMER")
+
                         .requestMatchers(HttpMethod.GET, "/api/customer/plan/get-all")
                         .hasAnyAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/executive/add")
@@ -90,8 +89,12 @@ public class SecurityConfig {
                         .hasAnyAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/executive/get/{id}")
                         .hasAnyAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/ticket/*")
-                        .hasAnyAuthority("ADMIN","CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/api/ticket/add-executive/{ticketId}/{executiveID}")
+                        .hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/customer/plan/add/{customerId}/{planId}")
+                        .hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/customer/plan/buy-plan/{planId}")
+                        .hasAuthority("CUSTOMER")
 
                         .anyRequest().permitAll()
 

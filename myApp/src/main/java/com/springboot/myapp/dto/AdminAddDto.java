@@ -1,4 +1,7 @@
 package com.springboot.myapp.dto;
 
-public class AdminAddDto {
+public record AdminAddDto(
+        String username,
+        String password
+) {
 }

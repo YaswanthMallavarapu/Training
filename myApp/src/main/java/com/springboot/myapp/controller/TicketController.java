@@ -4,14 +4,13 @@ import com.springboot.myapp.dto.*;
 import com.springboot.myapp.model.Ticket;
 import com.springboot.myapp.service.CustomerService;
 import com.springboot.myapp.service.TicketService;
-import jakarta.servlet.ServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -21,10 +20,11 @@ public class TicketController {
     private final TicketService ticketService;
     private final CustomerService customerService;
 
-    @PostMapping("/add/{customerId}")
-    public ResponseEntity<?> addTicket(@Valid @RequestBody TicketReqDto ticketReqDto,@PathVariable long customerId){
+    @PostMapping("/add")
+    public ResponseEntity<?> addTicket(@Valid @RequestBody TicketReqDto ticketReqDto, Principal principal){
 
-        Ticket ticket=ticketService.addTicket(ticketReqDto,customerId);
+
+        Ticket ticket=ticketService.addTicket(ticketReqDto,principal.getName());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(ticket);
@@ -47,16 +47,10 @@ public class TicketController {
 
     }
 
-    @PutMapping("/add-executive/{ticketId}/{executiveID}")
-    public void addExecutiveToTicket(@PathVariable long ticketId,
-                                     @PathVariable long executiveID, ServletRequest servletRequest){
 
-        ticketService.addExecutiveToTicket(ticketId,executiveID);
-
-    }
 
     @GetMapping("/get-all/{customerId}")
-    public ResponseEntity<?> getAllTicketsByCustomer(@PathVariable long customerId,
+    public ResponseEntity<?> getAllTicketsByCustomerId(@PathVariable long customerId,
                                                                                            @RequestParam(value = "page",required = false,defaultValue = "0")int page,
                                                                                            @RequestParam(value = "size",required = false,defaultValue = "5") int size){
         List<TicketWithCustomerExecutiveResDto>list=ticketService.getAllTicketsByCustomer(customerId,page,size);
@@ -64,5 +58,25 @@ public class TicketController {
                 .status(HttpStatus.OK)
                 .body(list);
         
+    }
+
+    @GetMapping("/get-all/v2")
+    public ResponseEntity<?> getAllTicketsByCustomer(
+                                                     @RequestParam(value = "page",required = false,defaultValue = "0")int page,
+                                                     @RequestParam(value = "size",required = false,defaultValue = "5") int size,
+                                                     Principal principal){
+        List<TicketWithCustomerExecutiveResDto>list=ticketService.getAllTicketsByCustomerV2(principal.getName(),page,size);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(list);
+
+    }
+
+    @PutMapping("/add-executive/{ticketId}/{executiveID}")
+    public void addExecutiveToTicket(@PathVariable long ticketId,
+                                     @PathVariable long executiveID){
+
+        ticketService.addExecutiveToTicket(ticketId,executiveID);
+
     }
 }

@@ -25,7 +25,7 @@ public class CustomerPlanService {
     private final PlanService planService;
     private final EndDateUtility endDateUtility;
 
-    public void buyPlan(CustomerPlanReqDto customerPlanReqDto, long customerId, long planId) {
+    public void assignPlan(CustomerPlanReqDto customerPlanReqDto, long customerId, long planId) {
         //check for customer
         Customer customer=customerService.getById(customerId);
         //check for plan
@@ -58,5 +58,26 @@ public class CustomerPlanService {
                 .map(CustomerPlanMapper::mapToDto)
                 .toList();
 
+    }
+
+    public void buyPlan(CustomerPlanReqDto customerPlanReqDto, String username, long planId) {
+        //check for customer
+        Customer customer=customerService.getByUsername(username);
+        //check for plan
+        Plan plan=planService.getById(planId);
+        //add other details for customer plan
+        //create end date from start date
+        LocalDate endDate=endDateUtility.getEndDate(customerPlanReqDto.startDate(),plan.getDays());
+        CustomerPlan customerPlan=new CustomerPlan();
+
+        customerPlan.setStartDate(customerPlanReqDto.startDate());
+        customerPlan.setEndDate(endDate);
+        customerPlan.setDiscount(customerPlanReqDto.discount());
+        customerPlan.setCoupon(customerPlanReqDto.coupon());
+        customerPlan.setCustomer(customer);
+        customerPlan.setPlan(plan);
+
+        //save in DB
+        customerPlanRepository.save(customerPlan);
     }
 }

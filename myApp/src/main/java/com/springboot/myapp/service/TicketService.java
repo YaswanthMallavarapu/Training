@@ -27,9 +27,11 @@ public class TicketService {
     private final CustomerService customerService;
     private final ExecutiveService executiveService;
 
-    public Ticket addTicket(@Valid TicketReqDto ticketReqDto, long customerId) {
+    public Ticket addTicket(@Valid TicketReqDto ticketReqDto, String username) {
         //check for customer
-        Customer customer=customerService.getById(customerId);
+
+        Customer customer=customerService.getByUsername(username);
+        System.out.println(customer);
         //convert to ticket
         Ticket ticket= TicketMapper.mapToTicket(ticketReqDto);
         //add additional
@@ -115,5 +117,18 @@ public class TicketService {
                 .toList();
 
 
+    }
+
+    public List<TicketWithCustomerExecutiveResDto> getAllTicketsByCustomerV2(String name, int page, int size) {
+        //check for customer
+        Customer customer=customerService.getByCustomer(name);
+        //create pagination
+        Pageable pageable=PageRequest.of(page,size);
+        Page<Ticket>pageList=ticketRepository.getAllByCustomer(customer.getId(),pageable);
+        return pageList
+                .toList()
+                .stream()
+                .map(TicketMapper::mapToResDto)
+                .toList();
     }
 }

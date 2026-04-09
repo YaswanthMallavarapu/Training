@@ -27,7 +27,7 @@ public class CustomerController {
 
     }
 
-    @PostMapping("/sign-up")
+    @PostMapping("/api/customer/sign-up")
     public ResponseEntity<?> customerSignUp(@Valid @RequestBody CustomerSignUpDto customerSignUpDto){
         customerService.signUpCustomer(customerSignUpDto);
         return ResponseEntity

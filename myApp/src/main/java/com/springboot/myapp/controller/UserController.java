@@ -10,6 +10,4 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
-
-
 }
