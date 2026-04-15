@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/ticket")
+@CrossOrigin(origins = "http://localhost:5173/")
 public class TicketController {
     private final TicketService ticketService;
     private final CustomerService customerService;
@@ -78,5 +79,21 @@ public class TicketController {
 
         ticketService.addExecutiveToTicket(ticketId,executiveID);
 
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<List<StatDto>> getStats(Principal principal){
+        List<StatDto>list=ticketService.getStats(principal.getName());
+        return ResponseEntity
+                .ok()
+                .body(list);
+    }
+
+    @GetMapping("/stats/v2")
+    public ResponseEntity<List<StatDtoV2>> getStatsV2(Principal principal){
+        List<StatDtoV2>list=ticketService.getStatsV2(principal.getName());
+        return ResponseEntity
+                .ok()
+                .body(list);
     }
 }

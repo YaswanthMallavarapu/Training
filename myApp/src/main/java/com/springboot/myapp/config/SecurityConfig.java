@@ -78,6 +78,12 @@ public class SecurityConfig {
                         .hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/customer/add")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/customer/get-one")
+                                .hasAuthority("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET,"/api/ticket/stats")
+                        .hasAuthority("CUSTOMER")
+                        .requestMatchers(HttpMethod.GET,"/api/ticket/stats/v2")
+                        .hasAuthority("CUSTOMER")
 
                         .requestMatchers(HttpMethod.GET, "/api/customer/plan/get-all")
                         .hasAnyAuthority("ADMIN")

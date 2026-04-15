@@ -1,6 +1,7 @@
 package com.springboot.myapp.repository;
 
 
+import com.springboot.myapp.dto.StatDtoV2;
 import com.springboot.myapp.enums.TicketPriority;
 import com.springboot.myapp.enums.TicketStatus;
 import com.springboot.myapp.model.Ticket;
@@ -29,4 +30,20 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
                       where t.customer.id=?1
            """)
     Page<Ticket> getAllByCustomer(Long id, Pageable pageable);
+
+
+    @Query("""
+           select t from Ticket t
+           where t.customer.user.username=?1
+""")
+    List<Ticket> getAllByUsername(String name);
+
+
+    @Query("""
+           select new com.springboot.myapp.dto.StatDtoV2(t.ticketStatus,count(t.id))
+           from Ticket t
+           where t.customer.user.username=?1
+           group by t.ticketStatus
+""")
+    List<StatDtoV2> getStatsV2(String name);
 }

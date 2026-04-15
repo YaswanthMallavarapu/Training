@@ -22,6 +22,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
+
 public class TicketService {
     private final TicketRepository ticketRepository;
     private final CustomerService customerService;
@@ -31,7 +32,7 @@ public class TicketService {
         //check for customer
 
         Customer customer=customerService.getByUsername(username);
-        System.out.println(customer);
+//        System.out.println(customer);
         //convert to ticket
         Ticket ticket= TicketMapper.mapToTicket(ticketReqDto);
         //add additional
@@ -130,5 +131,30 @@ public class TicketService {
                 .stream()
                 .map(TicketMapper::mapToResDto)
                 .toList();
+    }
+
+    public List<StatDto> getStats(String name) {
+        List<Ticket>list=ticketRepository.getAllByUsername(name);
+//        System.out.println(name);
+//        System.out.println(list);
+        List<Ticket>open=list.stream()
+                .filter(ticket->ticket.getTicketStatus().equals(TicketStatus.OPEN))
+                .toList();
+
+        List<Ticket>inprocess=list.stream()
+                .filter(ticket->ticket.getTicketStatus().equals(TicketStatus.IN_PROCESS))
+                .toList();
+        List<Ticket>closed=list.stream()
+                .filter(ticket->ticket.getTicketStatus().equals(TicketStatus.CLOSE))
+                .toList();
+
+        StatDto dto1=new StatDto("OPEN TICKETS",open.size());
+        StatDto dto2=new StatDto("IN_PROCESS TICKETS",inprocess.size());
+        StatDto dto3=new StatDto("CLOSED TICKETS",closed.size());
+        return List.of(dto1,dto2,dto3);
+    }
+
+    public List<StatDtoV2> getStatsV2(String name) {
+        return ticketRepository.getStatsV2(name);
     }
 }

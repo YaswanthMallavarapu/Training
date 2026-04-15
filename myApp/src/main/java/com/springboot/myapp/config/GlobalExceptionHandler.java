@@ -16,6 +16,7 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    private final String key="message";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(
@@ -39,7 +40,7 @@ public class GlobalExceptionHandler {
     ){
         Map<String,Object>map=new HashMap<>();
 
-        map.put("message","Enum must be valid");
+        map.put(key,"Enum must be valid");
         return ResponseEntity
                 .status(HttpStatus.EXPECTATION_FAILED)
                 .body(map);
@@ -51,7 +52,7 @@ public class GlobalExceptionHandler {
             ResourceNotFoundException e
     ){
         Map<String,String>map=new HashMap<>();
-        map.put("message",e.getMessage());
+        map.put(key,e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(map);
@@ -63,11 +64,21 @@ public class GlobalExceptionHandler {
     ){
         Map<String,Object>map=new HashMap<>();
 
-        map.put("message","Enum must be valid");
+        map.put(key,"Enum must be valid");
         return ResponseEntity
                 .status(HttpStatus.EXPECTATION_FAILED)
                 .body(map);
 
+    }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(
+            RuntimeException e
+    ){
+        Map<String,Object> map = new HashMap<>();
+        map.put(key, e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(map);
     }
 
 }

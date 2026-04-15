@@ -21,4 +21,8 @@ public class AdminService {
         user.setRole(Role.ADMIN);
         userRepository.save(user);
     }
+
+    public long getCount() {
+        return userRepository.count();
+    }
 }

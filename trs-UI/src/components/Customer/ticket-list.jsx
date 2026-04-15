@@ -1,0 +1,82 @@
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+
+const TiicketList = () => {
+    const { status } = useParams()
+    const [tickets, setTickets] = useState([])
+
+    const api = "http://localhost:8080/api/ticket/get-all/v2"
+    const config = {
+        headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+        }
+    }
+
+    useEffect(() => {
+        const fetchTickets = async () => {
+            const response = await axios.get(api, config)
+            setTickets(response.data)
+            filter(response.data)
+
+        }
+
+
+        const filter = (tickets) => {
+
+            const temp = tickets.filter(ticket => ticket.status === status)
+            console.log(temp);
+            setTickets([...temp])
+        }
+        fetchTickets()
+
+    }, [status])
+
+
+
+
+    return (
+        <div>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Subject</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Created Date</th>
+                        <th scope="col">Executive Name</th>
+                        <th scope="col">Executive JobTitle</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        tickets.map((ticket, index) => (
+                            
+                            <tr key={index}>
+                                <th scope="row">{index + 1}</th>
+                                <td>{ticket.subject}</td>
+                                <td>{ticket.status}</td>
+
+                                <td>{ticket.priority}</td>
+
+                                <td>{ticket.createdAt}</td>
+
+                                <td>{ticket.executiveName}</td>
+                                <td>{ticket.executiveJobTitle}</td>
+
+
+                            </tr>
+                            
+                            ))
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    )
+}
+
+export default TiicketList
