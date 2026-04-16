@@ -1,6 +1,7 @@
 package com.springboot.myapp.controller;
 
 import com.springboot.myapp.dto.*;
+import com.springboot.myapp.enums.TicketStatus;
 import com.springboot.myapp.model.Ticket;
 import com.springboot.myapp.service.CustomerService;
 import com.springboot.myapp.service.TicketService;
@@ -95,5 +96,13 @@ public class TicketController {
         return ResponseEntity
                 .ok()
                 .body(list);
+    }
+
+
+    @PutMapping("/update/status/{ticketId}")
+    public void updateStatus(@RequestParam TicketStatus ticketStatus,
+                             @PathVariable long ticketId,
+                             Principal principal){
+        ticketService.updateStatus(ticketStatus, ticketId, principal.getName());
     }
 }

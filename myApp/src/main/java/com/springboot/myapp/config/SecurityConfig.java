@@ -84,8 +84,13 @@ public class SecurityConfig {
                         .hasAuthority("CUSTOMER")
                         .requestMatchers(HttpMethod.GET,"/api/ticket/stats/v2")
                         .hasAuthority("CUSTOMER")
+                        .requestMatchers(HttpMethod.PUT,"/api/ticket/update/status/{ticketId}")
+                        .hasAuthority("CUSTOMER")
+
 
                         .requestMatchers(HttpMethod.GET, "/api/customer/plan/get-all")
+                        .hasAnyAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/customer/get-all")
                         .hasAnyAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/executive/add")
                         .hasAnyAuthority("ADMIN")

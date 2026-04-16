@@ -9,50 +9,73 @@ import Login from './components/Auth/login.jsx'
 import CustomerSignup from './components/Customer/Customer-signup.jsx'
 import PlanHome from './components/Customer/PlanHome.jsx'
 import TiicketList from './components/Customer/ticket-list.jsx'
+import { Provider } from 'react-redux'
+import { store } from './store.js'
+import CustomerList from './components/Admin/customer-list.jsx'
+import CustomerTicket from './components/Admin/customer-tickets.jsx'
+import AddTicket from './components/Customer/add-ticket.jsx'
 
 
-const routes=createBrowserRouter([
+const routes = createBrowserRouter([
     {
-        path:"",
-        element:<App/>
+        path: "",
+        element: <App />
     },
     {
-        path:"/login",
-        element:<Login/>
+        path: "/login",
+        element: <Login />
     },
     {
-        path:"/sign-up",
-        element:<CustomerSignup/>
+        path: "/add-ticket",
+        element: <AddTicket/>
     },
     {
-        path:"/admin-dashboard",
-        element:<AdminDashboard/>
+        path: "/sign-up",
+        element: <CustomerSignup />
     },
     {
-        path:"/customer-dashboard",
-        element:<CustomerDashboard/>,
-        children:[
+        path: "/admin-dashboard",
+        element: <AdminDashboard />,
+        children: [
             {
-                index:true,
-                element:<PlanHome/>
+                index: true,
+                element: <CustomerList />
+            }
+        ]
+    },
+    {
+        path: "/customer-dashboard",
+        element: <CustomerDashboard />,
+        children: [
+            {
+                index: true,
+                element: <PlanHome />
             },
             {
-                path:"show-ticket/:status",
-                element:<TiicketList/>
-            }
+                path: "show-ticket/:status",
+                element: <TiicketList />
+            },
+
 
         ]
 
     },
     {
-        path:"/executive-dashboard",
-        element:<ExecutiveDashboard/>
+        path: "/executive-dashboard",
+        element: <ExecutiveDashboard />
+    }
+    ,
+    {
+        path: "/show-customer-ticket/:customerId",
+        element: <CustomerTicket />
     }
 ])
 
 createRoot(document.getElementById('root')).render(
-  <RouterProvider router={routes}>
-    <App />
-    </RouterProvider>
-  
+    <Provider store={store}>
+        <RouterProvider router={routes}>
+            <App />
+        </RouterProvider>
+    </Provider>
+
 )

@@ -1,6 +1,7 @@
 package com.springboot.myapp.service;
 
 import com.springboot.myapp.dto.CustomerDto;
+import com.springboot.myapp.dto.CustomerResponseDto;
 import com.springboot.myapp.dto.CustomerSignUpDto;
 import com.springboot.myapp.enums.Role;
 import com.springboot.myapp.exceptions.ResourceNotFoundException;
@@ -14,6 +15,8 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -56,5 +59,13 @@ public class CustomerService {
 
     public Customer getByCustomer(String name) {
         return customerRepository.getCustomerByUsername(name);
+    }
+
+    public List<CustomerResponseDto> getAll() {
+        List<Customer>customers=customerRepository.findAll();
+        return customers
+                .stream()
+                .map(CustomerMapper::mapEntityToDto)
+                .toList();
     }
 }

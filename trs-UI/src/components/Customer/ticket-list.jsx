@@ -1,12 +1,15 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const TiicketList = () => {
     const { status } = useParams()
     const [tickets, setTickets] = useState([])
+    const [errMsg,setErrMsg]=useState(undefined)
+    const navigate=useNavigate()
 
     const api = "http://localhost:8080/api/ticket/get-all/v2"
+    const updateApi="http://localhost:8080/api/ticket/update/status/"
     const config = {
         headers: {
             Authorization: "Bearer " + localStorage.getItem("token")
@@ -32,6 +35,20 @@ const TiicketList = () => {
 
     }, [status])
 
+    const closeTicket=async(ticketId)=>{
+
+       try {
+        const response= await axios.put(updateApi+`${ticketId}?ticketStatus=CLOSE`,{},config);
+        navigate("/customer-dashboard/show-ticket/CLOSE")
+
+        setErrMsg(undefined)
+       } catch (error) {
+        setErrMsg(error.message)
+       }
+
+
+
+    }
 
 
 
@@ -46,7 +63,7 @@ const TiicketList = () => {
                         <th scope="col">Priority</th>
                         <th scope="col">Created Date</th>
                         <th scope="col">Executive Name</th>
-                        <th scope="col">Executive JobTitle</th>
+                        <th scope="col">Action</th>
 
                     </tr>
                 </thead>
@@ -64,7 +81,7 @@ const TiicketList = () => {
                                 <td>{ticket.createdAt}</td>
 
                                 <td>{ticket.executiveName}</td>
-                                <td>{ticket.executiveJobTitle}</td>
+                                <td><button className="btn btn-warning" onClick={()=>closeTicket(ticket.id)}>Close Ticket</button></td>
 
 
                             </tr>

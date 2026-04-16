@@ -46,4 +46,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
            group by t.ticketStatus
 """)
     List<StatDtoV2> getStatsV2(String name);
+
+    @Query("""
+    select t from Ticket t
+    where t.customer.id=?1
+""")
+    List<Ticket> getByCustomerId(long customerId);
 }

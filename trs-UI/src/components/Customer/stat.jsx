@@ -1,12 +1,13 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 const Stats = () => {
 
 
     const [errMsg, setErrMsg] = useState(undefined)
     const [stats, setStats] = useState([])
+    const {status}=useParams()
 
     const api = "http://localhost:8080/api/ticket/stats/v2"
     const config = {
@@ -29,7 +30,7 @@ const Stats = () => {
         }
         getStats()
 
-    }, [])
+    }, [status])
 
     return (
         <div className='card '>

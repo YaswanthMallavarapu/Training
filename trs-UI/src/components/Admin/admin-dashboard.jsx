@@ -1,7 +1,10 @@
+import CustomerList from "./customer-list"
+
 const AdminDashboard=()=>{
     return (
         <div>
-            Admin
+            Admin Dashboard
+            <CustomerList/>
         </div>
     )
 }

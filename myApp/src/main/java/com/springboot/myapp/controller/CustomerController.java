@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -43,5 +44,17 @@ public class CustomerController {
         String customerUsername = principal.getName();
         Customer customer =  customerService.getByUsername(customerUsername);
         return CustomerMapper.mapEntityToDto(customer);
+    }
+
+    @GetMapping("/api/customer/get-all")
+    public List<CustomerResponseDto> getAllCustomers(){
+        return customerService.getAll();
+
+    }
+
+    @GetMapping("/api/customer/get/{id}")
+    public Customer getCustomerById(@PathVariable long id){
+
+        return customerService.getById(id);
     }
 }

@@ -1,6 +1,7 @@
 package com.springboot.myapp.service;
 
 import com.springboot.myapp.dto.*;
+import com.springboot.myapp.enums.Role;
 import com.springboot.myapp.enums.TicketPriority;
 import com.springboot.myapp.enums.TicketStatus;
 import com.springboot.myapp.exceptions.ResourceNotFoundException;
@@ -8,6 +9,7 @@ import com.springboot.myapp.mapper.TicketMapper;
 import com.springboot.myapp.model.Customer;
 import com.springboot.myapp.model.Executive;
 import com.springboot.myapp.model.Ticket;
+import com.springboot.myapp.model.User;
 import com.springboot.myapp.repository.TicketRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final CustomerService customerService;
     private final ExecutiveService executiveService;
+    private final UserService userService;
 
     public Ticket addTicket(@Valid TicketReqDto ticketReqDto, String username) {
         //check for customer
@@ -110,9 +113,8 @@ public class TicketService {
         customerService.getById(customerId);
         //create pagination
         Pageable pageable=PageRequest.of(page,size);
-        Page<Ticket>pageList=ticketRepository.findAll(pageable);
+        List<Ticket>pageList=ticketRepository.getByCustomerId(customerId);
         return pageList
-                .toList()
                 .stream()
                 .map(TicketMapper::mapToResDto)
                 .toList();
@@ -157,4 +159,36 @@ public class TicketService {
     public List<StatDtoV2> getStatsV2(String name) {
         return ticketRepository.getStatsV2(name);
     }
+
+
+    public void updateStatus(TicketStatus ticketStatus, long ticketId, String loggedInUsername) {
+        Ticket ticket  = ticketRepository.findById(ticketId)
+                .orElseThrow(()-> new ResourceNotFoundException("Ticket Id Invalid."));
+
+        // This user is trying to update ticket
+        User user = (User) userService.loadUserByUsername(loggedInUsername);
+
+        // Check if the ticket belongs to this user
+        //If id of loggedIn user is equal to the id of ticket that needs to be updated. then let it go thru
+        //else throw an Exception
+
+        if(user.getRole().equals(Role.CUSTOMER)){
+            if( ticket.getCustomer().getUser().getId() != user.getId())
+                throw new ResourceNotFoundException("Customer does not own this ticket");
+
+        }
+        if(user.getRole().equals(Role.EXECUTIVE)){
+            if(ticket.getExecutive() == null)
+                throw new ResourceNotFoundException("Executive does not own this ticket");
+
+            if( ticket.getExecutive().getUser().getId() != user.getId())
+                throw new ResourceNotFoundException("Executive does not manage this ticket");
+
+        }
+
+        ticket.setTicketStatus(ticketStatus);
+        ticketRepository.save(ticket);
+
+    }
+
 }
