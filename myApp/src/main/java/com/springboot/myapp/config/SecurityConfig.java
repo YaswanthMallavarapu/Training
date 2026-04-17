@@ -87,6 +87,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT,"/api/ticket/update/status/{ticketId}")
                         .hasAuthority("CUSTOMER")
 
+                        .requestMatchers(HttpMethod.POST,"/api/document/upload")
+                        .hasAuthority("CUSTOMER")
+
 
                         .requestMatchers(HttpMethod.GET, "/api/customer/plan/get-all")
                         .hasAnyAuthority("ADMIN")

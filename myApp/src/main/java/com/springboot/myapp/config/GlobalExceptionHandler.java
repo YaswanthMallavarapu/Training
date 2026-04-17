@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntimeException(
             RuntimeException e
+    ){
+        Map<String,Object> map = new HashMap<>();
+        map.put(key, e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(map);
+    }
+
+
+    @ExceptionHandler(    IOException
+            .class)
+    public ResponseEntity<?> handle(
+            IOException
+                    e
     ){
         Map<String,Object> map = new HashMap<>();
         map.put(key, e.getMessage());
