@@ -16,6 +16,9 @@ import CustomerTicket from './components/Admin/customer-tickets.jsx'
 import AddTicket from './components/Customer/add-ticket.jsx'
 
 
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import StatBar from './components/Admin/stat-bar.jsx'
+
 const routes = createBrowserRouter([
     {
         path: "",
@@ -42,6 +45,10 @@ const routes = createBrowserRouter([
                 element: <CustomerList />
             }
         ]
+    },
+    {
+        path:'/stats',
+        element:<StatBar/>
     },
     {
         path: "/customer-dashboard",
